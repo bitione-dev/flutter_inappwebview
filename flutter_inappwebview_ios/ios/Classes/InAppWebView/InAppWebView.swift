@@ -270,6 +270,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                         builder.remove(menu: .format)
                         builder.remove(menu: .print)
                         builder.remove(menu: .learn)
+                        builder.remove(menu: .replace)
+                        builder.remove(menu: .text)
+                        builder.remove(menu: .writing)
                     }
                 }
             }
