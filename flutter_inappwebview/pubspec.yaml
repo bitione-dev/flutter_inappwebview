@@ -28,7 +28,7 @@ dependencies:
   flutter_inappwebview_ios: 
     git:
       url: https://github.com/bitione-dev/flutter_inappwebview.git
-      ref: b7ab1417c6a493eb150d4d39e32ecb45c803593d
+      ref: core_v6.1.5
       path: flutter_inappwebview_ios
 
 dev_dependencies:
