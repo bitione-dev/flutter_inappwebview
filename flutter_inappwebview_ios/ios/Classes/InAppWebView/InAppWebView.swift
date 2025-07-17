@@ -272,7 +272,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                         builder.remove(menu: .learn)
                         builder.remove(menu: .replace)
                         builder.remove(menu: .text)
-                        builder.remove(menu: .writing)
                         
                         if #available(iOS 17.0, *) {
                             let possibleMenuIdentifiers = [
@@ -283,9 +282,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                                 "com.apple.WebKit.link"
                             ]
                             for identifier in possibleMenuIdentifiers {
-                                if let menuIdentifier = UIMenu.Identifier(identifier) {
-                                    builder.remove(menu: menuIdentifier)
-                                }
+                                let menuIdentifier = UIMenu.Identifier(identifier)
+                                builder.remove(menu: menuIdentifier)
                             }
                         }
                     }
