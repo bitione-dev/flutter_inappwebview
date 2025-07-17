@@ -265,6 +265,29 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                     let _ = contextMenuSettings.parse(settings: contextMenuSettingsMap)
                     if contextMenuSettings.hideDefaultSystemContextMenuItems {
                         builder.remove(menu: .lookup)
+                        builder.remove(menu: .standardEdit)
+                        builder.remove(menu: .share)
+                        builder.remove(menu: .format)
+                        builder.remove(menu: .print)
+                        builder.remove(menu: .learn)
+                        builder.remove(menu: .replace)
+                        builder.remove(menu: .text)
+                        builder.remove(menu: .writing)
+                        
+                        if #available(iOS 17.0, *) {
+                            let possibleMenuIdentifiers = [
+                                "com.apple.menu.highlight",
+                                "com.apple.menu.copy-link",
+                                "com.apple.menu.copy-link-highlight",
+                                "com.apple.WebKit.selection",
+                                "com.apple.WebKit.link"
+                            ]
+                            for identifier in possibleMenuIdentifiers {
+                                if let menuIdentifier = UIMenu.Identifier(identifier) {
+                                    builder.remove(menu: menuIdentifier)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -312,8 +335,29 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 let contextMenuSettings = ContextMenuSettings()
                 if let contextMenuSettingsMap = menu["settings"] as? [String: Any?] {
                     let _ = contextMenuSettings.parse(settings: contextMenuSettingsMap)
+                    
                     if !action.description.starts(with: "onContextMenuActionItemClicked-") && contextMenuSettings.hideDefaultSystemContextMenuItems {
                         return false
+                    }
+                    
+                    if contextMenuSettings.hideDefaultSystemContextMenuItems {
+                        let actionString = NSStringFromSelector(action)
+                        let blockedActionPatterns = [
+                            "copy", "paste", "cut", "select", "define", "share", "lookup", 
+                            "translate", "speak", "highlight", "link", "_copy", "_paste", 
+                            "_cut", "_select", "_share", "_lookup", "_highlight", "_link",
+                            "copyLink", "highlightText", "addHighlight", "removeHighlight"
+                        ]
+                        
+                        for pattern in blockedActionPatterns {
+                            if actionString.lowercased().contains(pattern.lowercased()) {
+                                return false
+                            }
+                        }
+                        
+                        if actionString.hasPrefix("_") {
+                            return false
+                        }
                     }
                 }
             }
